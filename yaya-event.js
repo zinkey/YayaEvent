@@ -1,18 +1,8 @@
 /*yaya event 1.1.0 under MIT License 2011.3.25*/
 var YayaEvent = window.YayaEvent = (function(){
-	var events = [];
+	var events = {};
 	var  eventlist={};
 	var tag = "action";
-	function contains(item){
-		for (var i=0;i<events.length;i++)
-		{
-			if (events[i]===item)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 	function addEvt(type,listener){
 		type = type.toLowerCase().replace(/^on/,"");
 		if (document.addEventListener) {
@@ -25,14 +15,25 @@ var YayaEvent = window.YayaEvent = (function(){
 		addEvt(evt,function(e){
 			e=e||window.event;
 			var target = e.target||e.srcElement;
+			var bubble = true;
+			var first = true;
 			while (target)
 			{
-				var action = target.getAttribute&&target.getAttribute(tag);
-				if (action&&eventlist[action]&&eventlist[action][evt]&&eventlist[action][evt].call(target,e)!=true)
-				{
+				if (!bubble){
 					return;
 				}
+				var action = target.getAttribute&&target.getAttribute(tag);
+				if (action&&eventlist[action]&&eventlist[action][evt])
+				{
+					bubble = eventlist[action][evt].call(target,e);
+				}
+				else{
+					if (first){
+						return;
+					}
+				}
 				target = target.parentNode;
+				first = false;
 			}
 		});
 	}
@@ -60,9 +61,9 @@ var YayaEvent = window.YayaEvent = (function(){
 					}
 					for (var evt in map[i])
 					{
-						if (!contains(evt))
+						if (!events[evt])
 						{
-							events.push(evt);
+							events[evt]=true;
 							bindevt(evt);
 						}
 						eventlist[i][evt]=map[i][evt];
