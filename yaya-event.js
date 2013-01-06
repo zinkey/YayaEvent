@@ -20,8 +20,8 @@ var YayaEvent = window.YayaEvent = (function(){
 			while (target)
 			{	
 				if (!bubble){
-+					return;
-+				}
+					return;
+				}
 				var action = target.getAttribute&&target.getAttribute(tag);
 				if (action&&eventlist[action]&&eventlist[action][evt])
 				{
