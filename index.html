@@ -1,37 +1,53 @@
 <!doctype html>
-<html action="html">
+<html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-	<script src="fish-event.js"></script>
-	<script src="lib/template.js"></script>
+	<style>
+		#a{
+			width:100px;
+			height: 100px;
+			background: red;
+		}
+		#b{
+			width:200px;
+			height: 200px;
+			background: yellow;
+		}
+		#c{
+			width:300px;
+			height: 300px;
+			background: pink;
+		}
+	</style>
+	<script src="yaya-event.js"></script>
 </head>
 <body>
-	<ul id="list"></ul>
+
+	<div id="c" action="ok">
+		<div id="b">
+			<div action="ok" id="a">a</div>
+		</div>
+	</div>
 </body>
 
 
-<script type="text/template" id="template">
-	for (var i=0;i<1000;i++){
-		{$
-			<li onclick={%run(i)%} style="background:red;">
-				{%abc%}
-			</li>
-			<li onclick={%go()%} style="background:yellow;margin-bottom:10px;">
-				{%i%}_abcdefg
-			</li>
-		$}
-	}
-</script>
 <script>
-document.getElementById("list").innerHTML = YayaTemplate(document.getElementById("template").innerHTML).render({
-	run:FishEvent(function(i){
-		alert(i);
-	}),
-	go:FishEvent(function(){
-		alert(this.innerHTML);
-	}),
-	abc:123
-});
-</script>
 
+	YayaEvent.bind({
+		"ok":{
+			click:function(e){
+				e=e||window.event;
+				var target = e.target||e.srcElement;
+				alert(1);
+				if (this==target){
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+	});
+
+
+</script>
 </html>
